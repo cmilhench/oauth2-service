@@ -1,0 +1,46 @@
+name: Manual Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # This 'if' statement causes the job to only run the specified repo
+    # You can also simply use false which effectively disables the job ツ.
+    if: ${{ github.repository != 'cmilhench/template' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Go setup
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.x"
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+      - name: Run the code generation
+        run: go generate ./...
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run the linter
+        run: golangci-lint run
+
+      - name: Run the tests
+        run: go test ./...
+
+      - name: Build project
+        run: go build -installsuffix 'static' -ldflags '-w -s' -o app ./cmd/
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: ./app

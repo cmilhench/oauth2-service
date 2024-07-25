@@ -1,0 +1,7 @@
+.DS_Store
+.vscode/
+.version
+bin/
+vendor/
+tmp/
+main

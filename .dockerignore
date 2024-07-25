@@ -1,0 +1,17 @@
+.DS_Store
+.git/
+.gitignore
+.version
+.vscode/
+assets/
+bin/
+CONTRIBUTING.md
+db/
+docs/
+main
+README.md
+tmp/
+vendor/
+
+
+
